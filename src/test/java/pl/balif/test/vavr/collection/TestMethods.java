@@ -13,12 +13,11 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public class TestMethods {
 
-    public static final int DATA_TAB_SIZE = 10000;
 
     @State(Scope.Thread)
     public static class TabState {
         private Long[] tab;
-        @Param({"1000","100000","10000000"})
+        @Param({"10","100","1000","10000","100000"})
         int tabSize;
 
         @Setup(Level.Trial)
@@ -28,9 +27,8 @@ public class TestMethods {
         }
 
         private Long[] createTab() {
-            System.out.println("tabSize = " + tabSize);;
             Random r = new Random();
-            Long[] tab = new Long[DATA_TAB_SIZE];
+            Long[] tab = new Long[tabSize];
             for (int i = 0; i < tab.length; i++) {
                 tab[i] = System.currentTimeMillis() + r.nextInt(100);
             }
@@ -42,7 +40,7 @@ public class TestMethods {
         }
     }
 
-//    @Benchmark
+    @Benchmark
     public Object testVavrLListCrateMetod(TabState tab, Blackhole blackhole) {
         io.vavr.collection.List<Long> vavrListCreate = null;
         vavrListCreate = io.vavr.collection.List.of(tab.getTab());
